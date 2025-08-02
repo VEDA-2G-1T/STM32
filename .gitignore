@@ -6,6 +6,9 @@
 *.hex
 *.map
 *.lst
+*.dep
+*htm
+/MDK-ARM/Safetynet/*
 
 # IDE specific
 *.uvguix.*

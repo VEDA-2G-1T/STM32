@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Safetynet\Safetynet.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Safetynet\Safetynet.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6230001: Last Updated: Sat Aug  2 22:42:08 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6230001: Last Updated: Sun Aug  3 00:09:06 2025
 <BR><P>
 <H3>Maximum Stack Usage =        240 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1145,8 +1145,10 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;try_send_chk_rsp
 </UL>
 
-<P><STRONG><a name="[b2]"></a>LED_Init</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, led.o(.text.LED_Init))
-<BR><BR>[Calls]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
+<P><STRONG><a name="[b2]"></a>LED_Init</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, led.o(.text.LED_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = LED_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>

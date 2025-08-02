@@ -34,37 +34,46 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-typedef enum {
-    STATE_IDLE,
-    STATE_PARSE,
-    STATE_EXECUTE,
-    STATE_SEND_RESPONSE
-} SystemState;
-
 typedef void (*CommandHandler)(uint8_t *data, uint16_t length);
+
 typedef struct {
     uint8_t command;
     CommandHandler handler;
 } CommandEntry;
+
+// UART recieve state check enum
+typedef enum {
+    ST_WAIT_SOF,
+    ST_WAIT_LEN,
+    ST_WAIT_BODY
+} RxParseState;
+
+
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+// --- UART DMA Buffer Sizes ---
+#define DMA_RX_BUF_SIZE 128
+#define TX_BUF_SIZE     128
+#define MAX_FRAME_LEN   64
+
+// --- Protocol Defines ---
+#define SOF_BYTE       0x7E // Start of Frame
+#define TYPE_REQ       0x00 // 요청(Request) 타입
+#define TYPE_RSP       0x01 // 응답(Response) 타입
+
+// --- Command Codes ---
+#define CMD_TOGGLE     0x10 // LED/Buzzer 토글 명령
+#define CMD_CHK        0x11 // 주변장치 상태 확인 명령
+#define CMD_IWDG_REQ   0x12 // IWDG 리셋 테스트 요청 명령
+
 #define RX_BUF_SIZE 64
 #define PCF8591_ADDR (0x48 << 1) // HAL I2C ?? (7?? << 1)
 
-#define DMA_RX_BUF_SIZE 128
-#define TX_BUF_SIZE 128
-#define CMD_TOGGLE 0x10
-#define CMD_CHK    0x11
-#define CMD_IWDG_REQ 0x12
 
-#define SOF_BYTE       0x7E
-#define CMD_TOGGLE     0x10
-#define CMD_CHK        0x11
-#define TYPE_REQ       0x00
-#define TYPE_RSP       0x01
-#define MAX_FRAME_LEN  64
 
 
 /* USER CODE END PD */
@@ -90,27 +99,28 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 
+// --- UART DMA Buffers ---
 uint8_t dmaRxBuf[DMA_RX_BUF_SIZE];
 uint8_t txBuf[TX_BUF_SIZE];
 volatile uint16_t dmaRxHead = 0;
 
-static bool chk_led_done = false;
-static bool chk_buzzer_done = false;
-static bool chk_temp_done = false;
-static bool chk_cds_done = false;
-static uint8_t chk_seq_pending;
-static bool chk_pending = false;
+// --- Protocol-related Variables ---
+static uint8_t rx_buf[MAX_FRAME_LEN]; // 수신된 프레임 데이터 저장 버퍼
+static uint8_t rx_len = 0, rx_pos = 0;
+static RxParseState rx_state = ST_WAIT_SOF;
 
-// RX state
-static uint8_t  rx_buf[MAX_FRAME_LEN];
-static uint8_t  rx_len, rx_pos;
-static enum { ST_WAIT_SOF, ST_WAIT_LEN, ST_WAIT_BODY } rx_state = ST_WAIT_SOF;
-// TX sequence counter
-static uint8_t tx_seq = 0;
+// --- 'CHK' Command State Flags ---
+static bool chk_pending = false;       // CHK 응답 전송이 대기 중인지 여부
+static uint8_t chk_seq_pending;        // CHK 요청의 sequence number
+static bool chk_led_done = false;      // LED 확인 완료 여부
+static bool chk_buzzer_done = false;   // Buzzer 확인 완료 여부
+static bool chk_temp_done = false;     // 온도 센서 확인 완료 여부
+static bool chk_cds_done = false;      // 조도 센서 확인 완료 여부
 
+// --- System Health & IWDG ---
+volatile bool system_healthy = false;     // 시스템이 정상 동작 중인지 여부 (TIM2 콜백에서 주기적으로 set)
+volatile bool iwdg_reset_requested = false; // 외부로부터 IWDG 리셋 요청 여부
 
-volatile bool system_healthy = false;
-volatile bool iwdg_reset_requested = false;
 
 
 /* USER CODE END PV */
