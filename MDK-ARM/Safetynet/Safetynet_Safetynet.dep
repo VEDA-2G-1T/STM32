@@ -1,8 +1,8 @@
 Dependencies for Project 'Safetynet', Target 'Safetynet': (DO NOT MODIFY !)
 CompilerVersion: 6230000::V6.23::ARMCLANG
 F (startup_stm32f401xe.s)(0x688E151C)(--target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -masm=auto  -Wa,armasm,--diag_suppress=A1950W -c-gdwarf-4 -Wa,armasm,--pd,"__EVAL SETA 1"-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-Wa,armasm,--pd,"__UVISION_VERSION SETA 542" -Wa,armasm,--pd,"STM32F401xE SETA 1" -Wa,armasm,--pd,"_RTE_ SETA 1"-o safetynet/startup_stm32f401xe.o)
-F (..\Core\Src\BUZZER\BUZZER.c)(0x688E10F6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/buzzer.o -MMD)
-I (..\Core\Src\BUZZER\BUZZER.h)(0x688E10F6)
+F (..\Core\Src\BUZZER\BUZZER.c)(0x688E29FD)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/buzzer.o -MMD)
+I (..\Core\Src\BUZZER\BUZZER.h)(0x688E1E38)
 I (..\Core\Inc\main.h)(0x688E1519)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h)(0x684A7D5B)
 I (..\Core\Inc\stm32f4xx_hal_conf.h)(0x688E10F5)
@@ -34,9 +34,9 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x684A7D5B)
-F (..\Core\Src\BUZZER\BUZZER.h)(0x688E10F6)()
-F (..\Core\Src\LED\LED.c)(0x688E10F6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/led.o -MMD)
-I (..\Core\Src\LED\LED.h)(0x688E10F6)
+F (..\Core\Src\BUZZER\BUZZER.h)(0x688E1E38)()
+F (..\Core\Src\LED\LED.c)(0x688E2933)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/led.o -MMD)
+I (..\Core\Src\LED\LED.h)(0x688E2409)
 I (..\Core\Inc\main.h)(0x688E1519)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h)(0x684A7D5B)
 I (..\Core\Inc\stm32f4xx_hal_conf.h)(0x688E10F5)
@@ -68,9 +68,9 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x684A7D5B)
-F (..\Core\Src\LED\LED.h)(0x688E10F6)()
+F (..\Core\Src\LED\LED.h)(0x688E2409)()
 F (..\Core\Src\PCF8591T\PCF8591T.c)(0x688E10F6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/pcf8591t.o -MMD)
-I (..\Core\Src\PCF8591T\PCF8591T.h)(0x688E1222)
+I (..\Core\Src\PCF8591T\PCF8591T.h)(0x688E24B8)
 I (..\Core\Inc\main.h)(0x688E1519)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h)(0x684A7D5B)
 I (..\Core\Inc\stm32f4xx_hal_conf.h)(0x688E10F5)
@@ -102,8 +102,8 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x684A7D5B)
-F (..\Core\Src\PCF8591T\PCF8591T.h)(0x688E1222)()
-F (../Core/Src/main.c)(0x688E15A9)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/main.o -MMD)
+F (..\Core\Src\PCF8591T\PCF8591T.h)(0x688E24B8)()
+F (../Core/Src/main.c)(0x688E2240)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/main.o -MMD)
 I (..\Core\Src\main.h)(0x688E10F5)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h)(0x684A7D5B)
 I (..\Core\Inc\stm32f4xx_hal_conf.h)(0x688E10F5)
@@ -135,10 +135,10 @@ I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h)(0x684A7D5B)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h)(0x684A7D5B)
-I (..\Core\Src\LED\LED.h)(0x688E10F6)
+I (..\Core\Src\LED\LED.h)(0x688E2409)
 I (..\Core\Inc\main.h)(0x688E1519)
-I (..\Core\Src\BUZZER\BUZZER.h)(0x688E10F6)
-I (..\Core\Src\PCF8591T\PCF8591T.h)(0x688E1222)
+I (..\Core\Src\BUZZER\BUZZER.h)(0x688E1E38)
+I (..\Core\Src\PCF8591T\PCF8591T.h)(0x688E24B8)
 F (../Core/Src/stm32f4xx_it.c)(0x688E10F5)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM -I ../Core/Src-I./RTE/_Safetynet-IC:/Users/gustj/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-D__UVISION_VERSION="542" -DSTM32F401xE -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F401xE-o safetynet/stm32f4xx_it.o -MMD)
 I (..\Core\Src\main.h)(0x688E10F5)
 I (..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h)(0x684A7D5B)
