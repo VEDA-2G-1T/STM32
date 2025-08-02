@@ -24,9 +24,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "LED.h"
-#include "BUZZER.h"
-#include "PCF8591T.h"
+#include "LED/LED.h"
+#include "BUZZER/BUZZER.h"
+#include "PCF8591T/PCF8591T.h"
 
 #include <math.h>
 /* USER CODE END Includes */

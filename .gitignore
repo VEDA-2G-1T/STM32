@@ -1,0 +1,17 @@
+# Build artifacts
+*.o
+*.d
+*.axf
+*.bin
+*.hex
+*.map
+*.lst
+
+# IDE specific
+*.uvguix.*
+*.log
+*.bak
+*.uvopt
+*.launches
+.vscode/
+.idea/
