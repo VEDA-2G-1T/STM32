@@ -34,18 +34,22 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+// Define a function pointer type for command handler functions.
+// These functions will process the payload of a received command.
 typedef void (*CommandHandler)(uint8_t *data, uint16_t length);
 
+// Struct to map a command code to its corresponding handler function.
 typedef struct {
-    uint8_t command;
-    CommandHandler handler;
+    uint8_t command;      // The command code (e.g., CMD_TOGGLE)
+    CommandHandler handler; // Pointer to the function that handles this command
 } CommandEntry;
 
-// UART recieve state check enum
+// Enum for the UART reception state machine.
+// This helps in parsing incoming data streams byte-by-byte.
 typedef enum {
-    ST_WAIT_SOF,
-    ST_WAIT_LEN,
-    ST_WAIT_BODY
+    ST_WAIT_SOF,  // Waiting for the Start of Frame (SOF) byte
+    ST_WAIT_LEN,  // Waiting for the length byte
+    ST_WAIT_BODY  // Waiting for the frame body (payload and CRC)
 } RxParseState;
 
 
@@ -71,7 +75,6 @@ typedef enum {
 #define CMD_IWDG_REQ   0x12 // IWDG 리셋 테스트 요청 명령
 
 #define RX_BUF_SIZE 64
-#define PCF8591_ADDR (0x48 << 1) // HAL I2C ?? (7?? << 1)
 
 
 
@@ -136,19 +139,24 @@ static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_IWDG_Init(void);
 /* USER CODE BEGIN PFP */
-int fputc(int ch, FILE *f);
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
-void process_command(const char *cmd);
+int fputc(int ch, FILE *f); // Function to redirect printf output to UART
+
+// HAL Callbacks
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim); // Called when a timer period elapses
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);     // Called when UART reception is complete (not used here, using IDLE line instead)
+
+// Command Handlers
+void handle_toggle(uint8_t *data, uint16_t length);   // Handler for the TOGGLE command
+void handle_chk(uint8_t *data, uint16_t length);       // Handler for the CHK command
+void handle_iwdg_req(uint8_t *data, uint16_t length);  // Handler for the IWDG_REQ command
+
+void process_received_data(uint8_t *data, uint16_t length); //test 
+
+// Protocol and Communication Functions
+void start_uart_dma_rx(void); // Initializes and starts UART DMA reception with IDLE line detection
+static void send_frame(uint8_t cmd, uint8_t seq, uint8_t type, const uint8_t *data, uint8_t data_len); // Constructs and sends a data frame
 
 
-void handle_toggle(uint8_t *data, uint16_t length);
-void handle_chk(uint8_t *data, uint16_t length);
-void handle_iwdg_req(uint8_t *data, uint16_t length);
-void process_received_data(uint8_t *data, uint16_t length);
-void start_uart_dma_rx(void);
-static void send_frame(uint8_t cmd, uint8_t seq, uint8_t type,
-                       const uint8_t *data, uint8_t data_len);
 
 /* USER CODE END PFP */
 
@@ -162,12 +170,21 @@ int fputc(int ch, FILE *f)
 	//HAL_UART_Transmit_DMA(&huart2, &temp, 1);
 	return (ch);
 }
+
+/**
+ * @brief  Tries to send the response for the CHK command.
+ * @note   This function is called by the 'on_chk_..._done' callbacks. It checks if all
+ * peripheral checks are complete. If so, it assembles the payload and sends
+ * the response frame.
+ */
 void try_send_chk_rsp(void) {
     if (!chk_pending) return;
     if (!(chk_led_done && chk_buzzer_done && chk_temp_done && chk_cds_done)) return;
 
-    uint8_t payload[1+1+2+4];
+    // All checks are done, prepare the payload
+    uint8_t payload[1+1+2+4]; // Payload: LED(1) + Buzzer(1) + CDS(2) + Temp(4)
     uint8_t *p = payload;
+    
     *p++ = LED_GetCheckResult();
     *p++ = BUZZER_GetCheckResult();
     uint16_t cds = CDS_GetCheckResult();
@@ -180,32 +197,46 @@ void try_send_chk_rsp(void) {
     chk_pending = false;
 }
 
+// --- Callbacks for asynchronous peripheral checks ---
 void on_chk_led_done(void)    { chk_led_done = true; try_send_chk_rsp(); }
 void on_chk_buzzer_done(void) { chk_buzzer_done = true; try_send_chk_rsp(); }
 void on_chk_temp_done(void)   { chk_temp_done = true; try_send_chk_rsp(); }
 void on_chk_cds_done(void)    { chk_cds_done = true; try_send_chk_rsp(); }
 
+/**
+ * @brief  TIM period elapsed callback.
+ * @note   This function is called by the HAL when a timer (here, TIM2) overflows.
+ * It's used for periodic tasks.
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    if (htim->Instance == TIM2) {
-				
+    if (htim->Instance == TIM2) { // Check if it's the TIM2 interrupt
+        
+        // Call the timer-based processing functions for each peripheral module
         CDS_TimerCallback();
         TEMP_TimerCallback();
         LED_TimerCallback();
         BUZZER_TimerCallback();
+        
+        // If an IWDG reset is not pending, set the system_healthy flag.
+        // This flag signals to the main loop that it's safe to refresh the watchdog.
         if (!iwdg_reset_requested) {
             system_healthy = true;
         }
-
     }
 }
 
 
+// Command dispatch table: maps command codes to their handler functions.
 CommandEntry cmd_table[] = {
     { CMD_TOGGLE, handle_toggle },
     { CMD_CHK, handle_chk },
 		 { CMD_IWDG_REQ, handle_iwdg_req } 
 };
 
+/**
+ * @brief  Handles the CMD_TOGGLE command.
+ * @note   Toggles the LED, runs a buzzer sweep, and sends an acknowledgment response.
+ */
 void handle_toggle(uint8_t *data, uint16_t length) {
     LED_ProcessCommand("led toggle");
     BUZZER_ProcessCommand("buzz sweep");
@@ -216,7 +247,11 @@ void handle_toggle(uint8_t *data, uint16_t length) {
 		
 }
 
-
+/**
+ * @brief  Handles the CMD_CHK command.
+ * @note   Initiates asynchronous checks for all peripherals and sets up callbacks.
+ * The actual response is sent later by try_send_chk_rsp().
+ */
 void handle_chk(uint8_t *data, uint16_t length) {
     chk_led_done = chk_buzzer_done = chk_temp_done = chk_cds_done = false;
 
@@ -234,17 +269,33 @@ void handle_chk(uint8_t *data, uint16_t length) {
     chk_pending = true;
 }
 
+/**
+ * @brief  Handles the CMD_IWDG_REQ command.
+ * @note   Sets a flag to stop refreshing the IWDG, which will cause a system reset.
+ * Sends an ACK before the reset occurs.
+ */
 void handle_iwdg_req(uint8_t *data, uint16_t length) {
+    // Set flags to initiate the watchdog reset sequence in the main loop
     iwdg_reset_requested = true;
     system_healthy = false;
 	
-	  uint8_t seq = rx_buf[1];  // ??? ??? ?? ??
-    uint8_t ack[] = { 0x01 }; // ?? ?? ??? ("OK")
+	  uint8_t seq = rx_buf[1]; 
+    uint8_t ack[] = { 0x01 }; 
     send_frame(CMD_IWDG_REQ, seq, TYPE_RSP, ack, sizeof(ack));
 		
 		
 }
-
+/**
+ * @brief  Initializes UART DMA reception with Idle Line interrupt.
+ */
+void start_uart_dma_rx(void) {
+    // Clear the IDLE flag and enable the IDLE interrupt
+    __HAL_UART_CLEAR_IDLEFLAG(&huart2);
+    __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
+    
+    // Start receiving data into the DMA buffer
+    HAL_UART_Receive_DMA(&huart2, dmaRxBuf, DMA_RX_BUF_SIZE);
+}
 
 void process_received_data(uint8_t *data, uint16_t length) {
     if (length < 1) return;
@@ -259,12 +310,12 @@ void process_received_data(uint8_t *data, uint16_t length) {
     HAL_UART_Transmit_DMA(&huart2, txBuf, strlen((char *)txBuf));
 }
 
-void start_uart_dma_rx(void) {
-    __HAL_UART_CLEAR_IDLEFLAG(&huart2);
-    __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&huart2, dmaRxBuf, DMA_RX_BUF_SIZE);
-}
-
+/**
+ * @brief  Calculates the CRC-16 (Modbus) for a given buffer.
+ * @param  buf Pointer to the data buffer.
+ * @param  len Length of the data.
+ * @retval The calculated 16-bit CRC value.
+ */
 static uint16_t calc_crc16(const uint8_t *buf, uint16_t len) {
     uint16_t crc = 0xFFFF;
     for (uint16_t i = 0; i < len; ++i) {
@@ -277,7 +328,14 @@ static uint16_t calc_crc16(const uint8_t *buf, uint16_t len) {
     return crc;
 }
 
-// ??? ??
+/**
+ * @brief  Constructs a complete frame and sends it over UART using DMA.
+ * @param  cmd The command code.
+ * @param  seq The sequence number.
+ * @param  type The frame type (Request or Response).
+ * @param  data Pointer to the payload data.
+ * @param  data_len Length of the payload data.
+ */
 static void send_frame(uint8_t cmd, uint8_t seq, uint8_t type,
                        const uint8_t *data, uint8_t data_len)
 {
@@ -301,7 +359,11 @@ static void send_frame(uint8_t cmd, uint8_t seq, uint8_t type,
 }
 
 
-// ??? ?? ??
+/**
+ * @brief  Parses a single byte from the UART stream using a state machine.
+ * @note   This function is called from the UART ISR when data arrives.
+ * When a complete, valid frame is received, it dispatches the command.
+ */
 void parse_byte(uint8_t b) {
     switch (rx_state) {
     case ST_WAIT_SOF:
@@ -389,14 +451,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	
 	// printf("STM32 ready. Type 'hi' from PC.\r\n");
-	
+
+  // Initialize custom peripheral drivers
 	LED_Init();
 	BUZZER_Init();
-	
+
+  // Start TIM2 in interrupt mode for periodic tasks (e.g., watchdog feeding)
 	HAL_TIM_Base_Start_IT(&htim2);
-//	HAL_UART_Receive_IT(&huart2, &rx_data, 1);
+
+  // Start TIM1 PWM for the buzzer
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-	 start_uart_dma_rx();  
+
+	// Start UART DMA reception
+  start_uart_dma_rx();
 
 
   /* USER CODE END 2 */
@@ -405,18 +472,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    // This logic handles the Independent Watchdog (IWDG).
     if (iwdg_reset_requested) {
-        // IWDG ?? ?? ??: ?? ????? ??
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+        // If an IWDG reset has been requested via UART command:
+        // - Enter a fast-blinking loop.
+        // - Do NOT refresh the IWDG.
+        // - This will cause the IWDG to time out and reset the MCU.
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // On-board LED
         HAL_Delay(200);
     } else {
-        // ?? ??: ?? ??? + IWDG Refresh
+        // Normal operation:
+        // - Blink the LED at a slower rate to indicate normal functioning.
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         HAL_Delay(500);
 
+        // Check the health flag, which is set by the TIM2 interrupt.
         if (system_healthy) {
-            HAL_IWDG_Refresh(&hiwdg);
-            system_healthy = false;
+            HAL_IWDG_Refresh(&hiwdg); // Refresh (pet) the watchdog
+            system_healthy = false;   // Clear the flag until the next timer tick
         }
     }
     /* USER CODE END WHILE */

@@ -268,20 +268,13 @@ void USART2_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-//void onUartIdle(void) {
-//    uint16_t dmaRxTail = DMA_RX_BUF_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);
-//    while (dmaRxHead != dmaRxTail) {
-//        uint8_t byte = dmaRxBuf[dmaRxHead++];
-//        if (dmaRxHead >= DMA_RX_BUF_SIZE) dmaRxHead = 0;
-//        process_received_data(&byte, 1);
-//    }
-//}
 
 void onUartIdle(void) {
     uint16_t dmaRxTail = DMA_RX_BUF_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);
     while (dmaRxHead != dmaRxTail) {
         parse_byte(dmaRxBuf[dmaRxHead]);
         if (++dmaRxHead >= DMA_RX_BUF_SIZE) dmaRxHead = 0;
+        // process_received_data(&byte, 1);
     }
 }
 
