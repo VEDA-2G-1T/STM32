@@ -1,4 +1,4 @@
-# STM32 Peripheral Firmware
+# STM32 Firmware
 
 ## Overview
 STM32-based firmware for managing peripheral devices including LEDs, buzzers, CDS light sensors, and temperature sensors using PCF8591T ADC/DAC via I²C. Features UART-based command processing, watchdog management, PWM control, ADC sampling, and hardware self-check mechanisms.
@@ -21,9 +21,9 @@ STM32-based firmware for managing peripheral devices including LEDs, buzzers, CD
 |----------------|------------|-------------------------------------------|
 | LED            | PA9        | Active-low LED                            |
 | Buzzer         | PA8        | PWM Buzzer                                |
-| CDS Sensor     | PCF8591 AIN0 | CDS Photoresistor (Light Sensor)        |
-| Temp Sensor    | PCF8591 AIN1 | NTC Thermistor (Temperature Sensor)     |
-| UART           | PA2 / PA3  | UART TX/RX Communication                  |
+| CDS Sensor     | PB8,9 | CDS Photoresistor (Light Sensor)        |
+| Temp Sensor    | PB8,9 | NTC Thermistor (Temperature Sensor)     |
+| UART           | PA2,PA3  | UART TX/RX Communication                  |
 
 ## Build & Development Environment
 
